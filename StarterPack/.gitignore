@@ -1,1 +1,3 @@
 dataset_large.csv
+*.dataset_large
+*.exe
