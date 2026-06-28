@@ -4,8 +4,8 @@
 #include <string>
 #include <chrono>
 #include "utils.h"
-#include "bplus_tree.h"
-#include "btree.h"
+#include "BPlusTree/bplus_tree.h"
+#include "BTree/btree.h"
 
 using namespace std;
 using namespace std::chrono;

@@ -1,7 +1,7 @@
 #ifndef BTREE_DISK_H
 #define BTREE_DISK_H
 
-#include "bplus_tree_disk.h"
+#include "../BPlusTree/bplus_tree_disk.h"
 
 #define MAX_BTREE_KEYS 60
 

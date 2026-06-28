@@ -2,8 +2,8 @@
 #define UTILS_H
 
 #include <iostream>
-#include "bplus_tree_disk.h"
-#include "btree_disk.h"
+#include "BPlusTree/bplus_tree_disk.h"
+#include "BTree/btree_disk.h"
 
 // Global Database Pointers and Headers
 extern FILE* db_file;
