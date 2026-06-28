@@ -28,16 +28,22 @@ int allocateBNode() {
     return offset; 
 }
 
+// Đệ quy chèn Record mới vào True B-Tree
+// Trả về true nếu Node hiện tại bị Split (tách đôi), đồng thời truyền promoted_record và new_offset lên cho Node cha
 bool insertBTreeRecursive(int current_offset, int id, const char* payload, Record& promoted_record, int& new_offset) {
     BNode node;
     readBNode(current_offset, node);
 
+    // Tìm vị trí chèn thích hợp
     int pos = 0;
     while (pos < node.num_keys && node.records[pos].id < id) pos++;
     
+    // Bỏ qua nếu ID đã tồn tại trong Node
     if (pos < node.num_keys && node.records[pos].id == id) return false;
 
+    // TRƯỜNG HỢP 1: XỬ LÝ TẠI NODE LÁ
     if (node.is_leaf) {
+        // Nếu Node Lá chưa đầy, chèn trực tiếp Record vào mảng
         if (node.num_keys < MAX_BTREE_KEYS) {
             for (int i = node.num_keys; i > pos; --i) {
                 node.records[i] = node.records[i - 1];
@@ -49,10 +55,12 @@ bool insertBTreeRecursive(int current_offset, int id, const char* payload, Recor
             writeBNode(current_offset, node);
             return false;
         } else {
+            // Tách Node Lá khi mảng đã đầy
             BNode new_node;
             memset(&new_node, 0, sizeof(BNode));
             new_node.is_leaf = true;
             
+            // Dồn tất cả Record vào mảng tạm để dễ phân chia
             Record temp_records[MAX_BTREE_KEYS + 1];
             for (int i = 0, j = 0; i < MAX_BTREE_KEYS + 1; ++i) {
                 if (i == pos) {
@@ -64,10 +72,11 @@ bool insertBTreeRecursive(int current_offset, int id, const char* payload, Recor
                 }
             }
 
+            // Chia đôi Node và rút phần tử ở giữa thăng cấp lên làm rào chắn
             int mid = MAX_BTREE_KEYS / 2;
             
             node.num_keys = mid;
-            promoted_record = temp_records[mid];
+            promoted_record = temp_records[mid]; // Khác B+ Tree, B-Tree nhấc bổng toàn bộ Record lên
             
             new_node.num_keys = MAX_BTREE_KEYS - mid;
             for (int i = 0; i < node.num_keys; ++i) {
@@ -83,13 +92,19 @@ bool insertBTreeRecursive(int current_offset, int id, const char* payload, Recor
             writeBNode(right_offset, new_node);
             return true;
         }
-    } else {
+    } 
+    // TRƯỜNG HỢP 2: XỬ LÝ TẠI NODE TRONG
+    else {
         Record child_promoted_record;
         int child_new_offset;
+        
+        // Gọi đệ quy xuống Node con tương ứng
         bool split = insertBTreeRecursive(node.children_offsets[pos], id, payload, child_promoted_record, child_new_offset);
 
+        // Không làm gì nếu Node con không bị tách
         if (!split) return false;
 
+        // Nếu Node con tách và thăng cấp một Record lên, tiến hành chèn vào Node hiện tại
         if (node.num_keys < MAX_BTREE_KEYS) {
             for (int i = node.num_keys; i > pos; --i) {
                 node.records[i] = node.records[i - 1];
@@ -101,10 +116,12 @@ bool insertBTreeRecursive(int current_offset, int id, const char* payload, Recor
             writeBNode(current_offset, node);
             return false;
         } else {
+            // Tách Node Trong khi mảng đã đầy
             BNode new_node;
             memset(&new_node, 0, sizeof(BNode));
             new_node.is_leaf = false;
 
+            // Dồn tất cả Record và đường dẫn Offset vào mảng tạm
             Record temp_records[MAX_BTREE_KEYS + 1];
             int temp_children[MAX_BTREE_KEYS + 2];
 
@@ -123,6 +140,7 @@ bool insertBTreeRecursive(int current_offset, int id, const char* payload, Recor
                 }
             }
 
+            // Chia đôi Node Trong và rút phần tử ở giữa thăng cấp tiếp
             int mid = MAX_BTREE_KEYS / 2;
             node.num_keys = mid;
             promoted_record = temp_records[mid];
@@ -150,7 +168,9 @@ bool insertBTreeRecursive(int current_offset, int id, const char* payload, Recor
     }
 }
 
+// Wrapper tạo Root cho True B-Tree
 void insertBTreeRecord(int id, const char* payload) {
+    // Khởi tạo Root đầu tiên dưới dạng Node Lá
     if (btree_header.root_offset == -1) {
         int root_offset = allocateBNode();
         BNode root;
@@ -168,6 +188,7 @@ void insertBTreeRecord(int id, const char* payload) {
         return;
     }
 
+    // Nếu Root cũ bị quá tải và tách làm đôi, tạo Root mới (Node Trong) chứa bản thăng cấp
     Record promoted_record;
     int new_offset;
     if (insertBTreeRecursive(btree_header.root_offset, id, payload, promoted_record, new_offset)) {
@@ -187,41 +208,50 @@ void insertBTreeRecord(int id, const char* payload) {
     }
 }
 
+// True B-Tree Point Query (Truy vấn 1 điểm với cơ chế Early Exit)
 bool pointQueryBTreeStyle(int target_id, bool use_binary_search) {
     if (btree_header.root_offset == -1) return false;
     
     int current_offset = btree_header.root_offset;
     BNode node;
     
+    // Duyệt qua từng tầng của cây để tìm ID
     while (current_offset != -1) {
         readBNode(current_offset, node);
         int idx = use_binary_search ? binarySearch(node.records, node.num_keys, target_id) 
                                     : linearSearch(node.records, node.num_keys, target_id);
         
+        // EARLY EXIT: Điểm ăn tiền của True B-Tree. Ngay khi tìm thấy ở Node Trong thì chốt kết quả và thoát ngay.
         if (idx < node.num_keys && node.records[idx].id == target_id) {
             return true; 
         }
         
+        // Dừng lại nếu đã chạm tới Node Lá mà vẫn không tìm thấy
         if (node.is_leaf) {
             return false;
         } else {
+            // Định tuyến đi xuống Node con tương ứng
             current_offset = node.children_offsets[idx];
         }
     }
     return false;
 }
 
+// Hàm đệ quy duyệt In-Order Traversal hỗ trợ truy vấn dải
 int rangeQueryBTreeRecursive(int offset, int start_id, int end_id, bool use_binary_search) {
     if (offset == -1) return 0;
     BNode node;
     readBNode(offset, node);
     
     int count = 0;
+    
+    // Tìm chặn dưới và chặn trên cho phạm vi tìm kiếm trong Node hiện tại
     int start_idx = use_binary_search ? binarySearch(node.records, node.num_keys, start_id)
                                       : linearSearch(node.records, node.num_keys, start_id);
     int end_idx_limit = use_binary_search ? binarySearch(node.records, node.num_keys, end_id + 1)
                                           : linearSearch(node.records, node.num_keys, end_id + 1);
 
+    // Thu thập kết quả từ Node Lá
     if (node.is_leaf) {
         for (int i = start_idx; i < node.num_keys; ++i) {
             if (node.records[i].id <= end_id) {
@@ -230,9 +260,13 @@ int rangeQueryBTreeRecursive(int offset, int start_id, int end_id, bool use_bina
                 break;
             }
         }
-    } else {
+    } 
+    // Tiến hành duyệt In-Order (Trái - Giữa - Phải) xuyên suốt cây
+    else {
         for (int i = start_idx; i <= end_idx_limit; ++i) {
             count += rangeQueryBTreeRecursive(node.children_offsets[i], start_id, end_id, use_binary_search);
+            
+            // Xử lý Record trung gian bị kẹp giữa 2 Node con
             if (i < end_idx_limit && i < node.num_keys) {
                 if (node.records[i].id >= start_id && node.records[i].id <= end_id) {
                     count++;
@@ -243,6 +277,7 @@ int rangeQueryBTreeRecursive(int offset, int start_id, int end_id, bool use_bina
     return count;
 }
 
+// B-Tree Range Query (Truy vấn dải bằng phương pháp In-Order Traversal)
 int rangeQueryBTreeStyle(int start_id, int end_id, bool use_binary_search) {
     if (btree_header.root_offset == -1) return 0;
     return rangeQueryBTreeRecursive(btree_header.root_offset, start_id, end_id, use_binary_search);

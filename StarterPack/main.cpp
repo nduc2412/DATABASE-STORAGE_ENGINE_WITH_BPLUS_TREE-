@@ -129,6 +129,7 @@ int main() {
         return 1;
     }
 
+    // Các mốc dữ liệu N để tiến hành Benchmark
     const int DATA_SIZES[] = {1000, 3000, 10000, 30000, 100000, 300000, 1000000, 3000000, 10000000};
     const int NUM_SIZES = sizeof(DATA_SIZES) / sizeof(DATA_SIZES[0]);
 
@@ -137,6 +138,7 @@ int main() {
         string filename = "index_" + to_string(N) + ".dat";
         string btree_filename = "btree_index_" + to_string(N) + ".dat";
         
+        // Mở file B+ Tree, nếu chưa có thì tạo mới và ghi Header
         db_file = fopen(filename.c_str(), "r+b");
         bool bplus_needs_import = false;
         if (!db_file) {

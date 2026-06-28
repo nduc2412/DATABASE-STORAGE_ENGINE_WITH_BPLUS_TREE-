@@ -5,20 +5,20 @@
 
 #define MAX_BTREE_KEYS 60
 
-// Standard B-Tree Node structure on disk
+// Cấu trúc Node chuẩn của True B-Tree trên ổ đĩa
 struct BNode {
-    bool is_leaf;       // true if Leaf, false if Internal Node
-    char padding1[3];   // Padding bytes for memory alignment
-    int num_keys;       // Current number of records contained
+    bool is_leaf;       // true nếu là Node Lá, false nếu là Node Trong
+    char padding1[3];   // Padding bytes để căn chỉnh bộ nhớ
+    int num_keys;       // Số lượng record hiện tại đang chứa
 
-    // In a B-Tree, both internal and leaf nodes contain Records 
+    // Trong True B-Tree, CẢ Node Trong và Node Lá đều chứa toàn bộ Record (Key + Payload)
     Record records[MAX_BTREE_KEYS];
     
-    // Child offsets for routing
+    // Mảng các vị trí Offset trỏ tới các Node con để định tuyến
     int children_offsets[MAX_BTREE_KEYS + 1];
 
-    // Padding to fill exactly 4KB (4096 bytes)
-    // 8 + 60*64 + 61*4 = 4092 bytes. Needs 4 bytes padding.
+    // Padding để lấp đầy chính xác 4KB (4096 bytes)
+    // Tính toán: 8 + 60*64 + 61*4 = 4092 bytes. Cần 4 bytes padding.
     char reserved[4];
 };
 
