@@ -11,7 +11,7 @@ struct BNode {
     char padding1[3];   // Padding bytes for memory alignment
     int num_keys;       // Current number of records contained
 
-    // In a true B-Tree, both internal and leaf nodes contain Records (data)
+    // In a B-Tree, both internal and leaf nodes contain Records 
     Record records[MAX_BTREE_KEYS];
     
     // Child offsets for routing

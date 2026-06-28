@@ -11,7 +11,7 @@ using namespace std;
 using namespace std::chrono;
 
 void runBenchmark(int N, const int query_ids[]) {
-    cout << "\n========== BENCHMARK WITH N = " << N << " ==========\n";
+    cout << "\n========== BENCHMARK WITH N = " << N << " ==========" << endl;
     
     int range_size = (N < 2000) ? 500 : 1000;
 
@@ -168,7 +168,7 @@ int main() {
         }
 
         if (bplus_needs_import || btree_needs_import) {
-            cout << "Importing " << N << " records...\n";
+            cout << "Importing " << N << " records..." << endl;
             ifstream csv_file("dataset_large.csv");
             if (!csv_file.is_open()) {
                 cerr << "Error: Could not find dataset_large.csv!\n";
@@ -191,10 +191,6 @@ int main() {
                 if (bplus_needs_import) insertRecord(id, payload.c_str());
                 if (btree_needs_import) insertBTreeRecord(id, payload.c_str());
                 count++;
-                
-                if (count % 100000 == 0) {
-                    cout << "   " << count << "/" << N << " imported...\n";
-                }
             }
             csv_file.close();
         }
