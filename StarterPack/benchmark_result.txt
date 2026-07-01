@@ -1,0 +1,90 @@
+========== BENCHMARK WITH N = 1000 ==========
+Point Query | B-Tree Style  | Linear Search : 8964 ns | 1.94 reads
+Point Query | B-Tree Style  | Binary Search : 8999 ns | 1.94 reads
+Point Query | B+ Tree Style | Linear Search : 9221 ns | 2 reads
+Point Query | B+ Tree Style | Binary Search : 8995 ns | 2 reads
+Range Query | B-Tree Style  | Linear Search : 14003 ns | 2.06 reads
+Range Query | B-Tree Style  | Binary Search : 18135 ns | 2.06 reads
+Range Query | B+ Tree Style | Linear Search : 16883 ns | 2.03 reads
+Range Query | B+ Tree Style | Binary Search : 14056 ns | 2.03 reads
+
+========== BENCHMARK WITH N = 3000 ==========
+Point Query | B-Tree Style  | Linear Search : 25092 ns | 2.92 reads
+Point Query | B-Tree Style  | Binary Search : 21240 ns | 2.92 reads
+Point Query | B+ Tree Style | Linear Search : 17284 ns | 2 reads
+Point Query | B+ Tree Style | Binary Search : 13414 ns | 2 reads
+Range Query | B-Tree Style  | Linear Search : 18806 ns | 3.08 reads
+Range Query | B-Tree Style  | Binary Search : 14262 ns | 3.08 reads
+Range Query | B+ Tree Style | Linear Search : 10888 ns | 2.05 reads
+Range Query | B+ Tree Style | Binary Search : 12256 ns | 2.05 reads
+
+========== BENCHMARK WITH N = 10000 ==========
+Point Query | B-Tree Style  | Linear Search : 14500 ns | 2.89 reads
+Point Query | B-Tree Style  | Binary Search : 16113 ns | 2.89 reads
+Point Query | B+ Tree Style | Linear Search : 11331 ns | 2 reads
+Point Query | B+ Tree Style | Binary Search : 8779 ns | 2 reads
+Range Query | B-Tree Style  | Linear Search : 20873 ns | 3.14 reads
+Range Query | B-Tree Style  | Binary Search : 12833 ns | 3.14 reads
+Range Query | B+ Tree Style | Linear Search : 11258 ns | 2.05 reads
+Range Query | B+ Tree Style | Binary Search : 11530 ns | 2.05 reads
+
+========== BENCHMARK WITH N = 30000 ==========
+Point Query | B-Tree Style  | Linear Search : 21242 ns | 2.89 reads
+Point Query | B-Tree Style  | Binary Search : 19923 ns | 2.89 reads
+Point Query | B+ Tree Style | Linear Search : 23620 ns | 3 reads
+Point Query | B+ Tree Style | Binary Search : 16515 ns | 3 reads
+Range Query | B-Tree Style  | Linear Search : 19156 ns | 3.21 reads
+Range Query | B-Tree Style  | Binary Search : 18719 ns | 3.21 reads
+Range Query | B+ Tree Style | Linear Search : 20767 ns | 3.08 reads
+Range Query | B+ Tree Style | Binary Search : 21486 ns | 3.08 reads
+
+========== BENCHMARK WITH N = 100000 ==========
+Point Query | B-Tree Style  | Linear Search : 32882 ns | 3.84 reads
+Point Query | B-Tree Style  | Binary Search : 34295 ns | 3.84 reads
+Point Query | B+ Tree Style | Linear Search : 38729 ns | 3 reads
+Point Query | B+ Tree Style | Binary Search : 41617 ns | 3 reads
+Range Query | B-Tree Style  | Linear Search : 49941 ns | 4.42 reads
+Range Query | B-Tree Style  | Binary Search : 48726 ns | 4.42 reads
+Range Query | B+ Tree Style | Linear Search : 33624 ns | 3.2 reads
+Range Query | B+ Tree Style | Binary Search : 48984 ns | 3.2 reads
+
+========== BENCHMARK WITH N = 300000 ==========
+Point Query | B-Tree Style  | Linear Search : 38043 ns | 3.84 reads
+Point Query | B-Tree Style  | Binary Search : 29842 ns | 3.84 reads
+Point Query | B+ Tree Style | Linear Search : 33415 ns | 3 reads
+Point Query | B+ Tree Style | Binary Search : 38961 ns | 3 reads
+Range Query | B-Tree Style  | Linear Search : 48117 ns | 4.47 reads
+Range Query | B-Tree Style  | Binary Search : 67464 ns | 4.47 reads
+Range Query | B+ Tree Style | Linear Search : 45169 ns | 3.25 reads
+Range Query | B+ Tree Style | Binary Search : 39690 ns | 3.25 reads
+
+========== BENCHMARK WITH N = 1000000 ==========
+Point Query | B-Tree Style  | Linear Search : 30155 ns | 3.8 reads
+Point Query | B-Tree Style  | Binary Search : 45884 ns | 3.8 reads
+Point Query | B+ Tree Style | Linear Search : 33311 ns | 3 reads
+Point Query | B+ Tree Style | Binary Search : 39738 ns | 3 reads
+Range Query | B-Tree Style  | Linear Search : 44811 ns | 4.75 reads
+Range Query | B-Tree Style  | Binary Search : 51439 ns | 4.75 reads
+Range Query | B+ Tree Style | Linear Search : 41740 ns | 3.45 reads
+Range Query | B+ Tree Style | Binary Search : 46276 ns | 3.45 reads
+
+========== BENCHMARK WITH N = 3000000 ==========
+Point Query | B-Tree Style  | Linear Search : 363717 ns | 3.77 reads
+Point Query | B-Tree Style  | Binary Search : 28939 ns | 3.77 reads
+Point Query | B+ Tree Style | Linear Search : 240750 ns | 3 reads
+Point Query | B+ Tree Style | Binary Search : 26094 ns | 3 reads
+Range Query | B-Tree Style  | Linear Search : 302228 ns | 5.45 reads
+Range Query | B-Tree Style  | Binary Search : 53409 ns | 5.45 reads
+Range Query | B+ Tree Style | Linear Search : 326787 ns | 4.37 reads
+Range Query | B+ Tree Style | Binary Search : 37885 ns | 4.37 reads
+Importing 10000000 records...
+
+========== BENCHMARK WITH N = 10000000 ==========
+Point Query | B-Tree Style  | Linear Search : 255818 ns | 4.72 reads
+Point Query | B-Tree Style  | Binary Search : 49904 ns | 4.72 reads
+Point Query | B+ Tree Style | Linear Search : 310018 ns | 4 reads
+Point Query | B+ Tree Style | Binary Search : 61473 ns | 4 reads
+Range Query | B-Tree Style  | Linear Search : 6527037 ns | 29.16 reads
+Range Query | B-Tree Style  | Binary Search : 509306 ns | 29.16 reads
+Range Query | B+ Tree Style | Linear Search : 7599863 ns | 27.94 reads
+Range Query | B+ Tree Style | Binary Search : 546137 ns | 27.94 reads
